@@ -6,6 +6,12 @@ editor: visual
 
 ## Introduction
 
+Measles is a highly contagious viral disease that can lead to serious health complications, especially in young children. Vaccination programmes such as the measles, mumps, and rubella (MMR) vaccine have been highly effective in reducing the spread of measles. However, in public confidence in vaccination programmes can strongly influence vaccination uptake and therefore the level of susceptability within a population.
+
+In 1998, a study by Wakefield et al. suggested a potential link between the MMR vaccine and autism. Although this claim was later widely discredited and the paper was partially retracted in 2004, the resulting media attention led to a notable decline in vaccination uptake across parts of the United Kingdom. Reduced vaccination coverage increases the proportion of children susceptible to measles, potentially increasing risk of outbreaks.
+
+This report analyses measles susceptibility among pre-school children in Glasgow between 1998 and 2014 using data from the Scottish Childhood Immunisation Record System (SCIRS). The main objective is to investigate whether measles susceptibility changed over time and whether any change occurred following the retraction of the Wakefield article in 2004. In particular, the analysis focuses on modelling the proportion of children susceptible to measles across the study period.
+
 ## Exploratory Analysis
 
 ## Formal Analysis
