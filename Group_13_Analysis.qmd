@@ -4,6 +4,18 @@ format: html
 editor: visual
 ---
 
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+library(ggplot2)
+library(tidyverse)
+library(sjPlot)
+library(performance)
+library(kableExtra)
+library(knitr)
+```
+
 ## Introduction
 
 Measles is a highly contagious viral disease that can lead to serious health complications, especially in young children. Vaccination programmes such as the measles, mumps, and rubella (MMR) vaccine have been highly effective in reducing the spread of measles. However, in public confidence in vaccination programmes can strongly influence vaccination uptake and therefore the level of susceptability within a population.
@@ -15,5 +27,67 @@ This report analyses measles susceptibility among pre-school children in Glasgow
 ## Exploratory Analysis
 
 ## Formal Analysis
+
+```{r}
+#| echo: false
+#| message: false
+
+glasmeasles <- read.csv("DAProject13.csv") |>
+  mutate(prop = Y/N, post_2004 = as_factor(ifelse(Year >= 2004, 1, 0)))
+glasmeasles$Year <- as.factor(glasmeasles$Year)
+```
+
+This section creates a model for each year as level of factor
+
+```{r}
+#| echo: false
+#| message: false
+
+year_model <- glm(prop ~ Year, data = glasmeasles, weights = N, family = binomial)
+
+year_model %>% tab_model(transform = NULL)
+```
+
+```{r}
+#| echo: false
+#| message: false
+
+check_overdispersion(year_model)
+```
+
+```{r}
+#| echo: false
+#| message: false
+
+plot_model(type = "pred",
+           year_model,
+           terms = "Year",
+           axis.title = c("Year",
+                          "Prob. of a child being susceptible to measles"),
+           title = " ")
+```
+
+This section tests difference between data from before 2004 and data from 2004 and later
+
+```{r}
+#| echo: false
+#| message: false
+
+prepost_model <- glm(prop ~ post_2004, data = glasmeasles, weights = N, family = binomial)
+
+prepost_model %>% tab_model(transform = NULL)
+```
+
+```{r}
+#| echo: false
+#| message: false
+
+plot_model(type = "pred",
+           prepost_model,
+           terms = "post_2004",
+           axis.title = c("Before and after 2004",
+                          "Prob. of a child being susceptible to measles"),
+           title = " ")
+```
 
 ## Conclusions
