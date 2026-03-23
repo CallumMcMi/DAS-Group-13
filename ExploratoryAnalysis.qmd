@@ -1,0 +1,120 @@
+---
+title: "Measles susceptibility in Glasgow"
+number-sections: true
+format: 
+  html:
+    embed-resources: true
+    code-tools: true
+editor_options: 
+  chunk_output_type: console
+theme: flatly
+---
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+library(ggplot2)
+library(tidyverse)
+library(sjPlot)
+library(performance)
+library(kableExtra)
+library(knitr)
+```
+
+## Introduction
+
+## Exploratory Analysis
+
+```{r}
+#| echo: false
+#| message: false
+
+glasmeasles <- read.csv("DAProject13.csv") |>
+  mutate(prop = Y/N)
+```
+
+To understand the trajectory of measles susceptibility in Glasgow between 1998 and 2014, we first examined the proportion of susceptible pre-school children (Y/N) rather than just raw counts. This allows for fair comparison across the 133 intermediate zones.
+
+To observe the broader city-wide trend, we aggregated these data to calculate the overall annual proportion of susceptible children across Glasgow. @fig-trend visualizes this progression over the 16-year period, with a dashed line at 2004 to help visually assess if the article's partial retraction aligned with a clear change in susceptibility levels.
+
+```{r}
+#| echo: false
+#| fig-cap: Measles Susceptibility in Glasgow Pre-schoolers (1998-2014). The red dashed line indicates the 2004 partial retraction of the Wakefield article
+#| label: fig-trend
+#| fig-align: center
+#| fig-width: 6
+#| fig-height: 4
+
+yearly_trend <- glasmeasles %>%
+  group_by(Year) %>%
+  summarise(
+    Total_Y = sum(Y),
+    Total_N = sum(N),
+    Proportion = Total_Y / Total_N
+  )
+
+
+ggplot(yearly_trend, aes(x = Year, y = Proportion)) +
+  geom_line(color = "skyblue", linewidth = 1) +
+  geom_point(color = "darkblue", size = 2) +
+  geom_vline(xintercept = 2004, linetype = "dashed", color = "red", linewidth = 1) +
+  labs(
+    x = "Year",
+    y = "Proportion of Susceptible Children"
+  ) +
+  theme_minimal() +
+  scale_x_continuous(breaks = seq(1998, 2014, by = 2))
+```
+
+@fig-trend demonstrates a clear shift in measles susceptibility. Between 1998 and 2004, the proportion of susceptible children rose to a peak of just over 15%. A distinct reversal in this trend occurred alongside the 2004 article retraction. Following this 2004 turning point, susceptibility levels steadily declined, reaching their lowest observed rate of approximately 8% by the end of the study period.
+
+To understand if the city-wide trend reflects all of Glasgow or just a few areas, we must look at the 133 individual neighbourhoods. @fig-box illustrates the yearly spread of susceptibility across these zones. This helps us see how much the neighbourhoods differ from one another and identifies any outliers with abnormally high susceptibility.
+
+```{r}
+#| echo: false
+#| warning: false
+#| fig-cap: "Distribution of measles susceptibility rates across Glasgow's 133 intermediate zones (1998-2014)."
+#| label: fig-box
+#| fig-align: center
+#| fig-width: 7
+#| fig-height: 5
+
+glasmeasles %>%
+  ggplot(aes(x = factor(Year), y = prop)) +
+  geom_boxplot(fill = "steelblue4", alpha = 0.6) +
+  labs(
+    x = "Year",
+    y = "Proportion of Susceptible Children"
+  ) +
+  theme_minimal()
+```
+
+As seen in @fig-box, Glasgows neighborhood medians peak in 2004, following the city-wide trend. Variability was highest between 2002 and 2006, suggesting the vaccine scare affected some areas much more than others. By 2014, neighbourhoods became more similar as susceptibility fell city-wide. Persistent outliers highlight specific high-risk zones, such as one neighborhood in 2000 with a rate exceeding 45%, well above the city average.
+
+To support the visual trends observed in the previous figures, @tbl-summary provides the precise numerical values for the mean, median, and standard deviation of measles susceptibility across the 133 intermediate zones for each year.
+
+```{r}
+#| echo: false
+#| label: tbl-summary
+#| tbl-cap: Mean, median and standard deviation (sd) of the proportion of measles susceptibility in Glasgow by Year.
+
+summary <- glasmeasles %>%
+  summarise('Prop_Mean' = mean(prop, na.rm = TRUE),
+            'Prop_Median' = median(prop, na.rm = TRUE),
+            'Prop_sd' = sd(prop, na.rm = TRUE),
+            .by = Year)
+
+summary %>%
+  kable(col.names = c("Year",
+                      "Mean Proportion",
+                      "Median Proportion",
+                      "Proportion SD"),
+        digits = 3)
+```
+
+The mean and median proportions in @tbl-summary confirm that susceptibility peaked in 2004 at roughly 15%. Furthermore, the Standard Deviation (SD) column measures the variability discussed earlier. The SD was highest between 2000 and 2002, confirming that the gap between neighbourhoods was widest during the early years of the vaccine scare. By 2012, the SD fell to its lowest level ($0.024$), showing that susceptibility rates across Glasgow became more uniform as they declined.
+
+## Formal Analysis
+
+## Conclusions

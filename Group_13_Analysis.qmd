@@ -37,8 +37,7 @@ glasmeasles <- read.csv("DAProject13.csv") |>
 glasmeasles$Year <- as.factor(glasmeasles$Year)
 ```
 
-This section creates a model for each year as level of factor
-
+Building on the patterns observed in the exploratory analysis, logistic regression models were fitted to formally assess changes in measles susceptibility over time, using year as a categorical predictor and as a binary indicator for pre and post 2004.
 ```{r}
 #| echo: false
 #| message: false
@@ -67,7 +66,9 @@ plot_model(type = "pred",
            title = " ")
 ```
 
-This section tests difference between data from before 2004 and data from 2004 and later
+The year-specific model confirms the temporal pattern identified in the exploratory analysis. Relative to 1998, susceptibility increases significantly between 2000 and 2004, with the largest effects observed in 2002 and 2004 (log-odds ≈ 0.33-0.34, p < 0.001), corresponding to probabilities of around 15-16%. Although 2006 remains elevated, the effect is smaller, indicating the start of a decline. From 2008 onwards, coefficients become negative, with significant reductions by 2010 and continuing through 2012 and 2014. This closely aligns  with the earlier visual trends, providing strong statistical evidence for a peak in the early 2000s followed by a sustained decline.
+
+To formally assess whether a structural change occurred around 2004, a second model compares observations before and after this point.
 
 ```{r}
 #| echo: false
@@ -89,5 +90,10 @@ plot_model(type = "pred",
                           "Prob. of a child being susceptible to measles"),
            title = " ")
 ```
+
+The pre/post 2004 model tests the apparent turning point identified in the exploratory analysis. The post 2004 coefficient is negative and highly significant (log-odds = -0.23, p < 0.001), indicating a reduction in susceptibility after 2004. This corresponds to a decrease in probability from approximately 13.5% to 11%, consistent to a decrease with the observed downward trend. This provides strong evidence of a structural change in susceptibility occurring around 2004.
+
+The overdispersion test is statistically significant (dispersion ratio = 1.156, p < 0.001), but the magnitude is small, suggesting the model remains appropriate. Overall, the results provide consistent evidence that susceptibility increased in the early 2000s, peaked around 2002-2004, and declined significantly thereafter. The agreement between both models strengthens the conclusion that a meaningful change occurred around 2004.
+
 
 ## Conclusions
