@@ -4,6 +4,18 @@ format: html
 editor: visual
 ---
 
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+library(ggplot2)
+library(tidyverse)
+library(sjPlot)
+library(performance)
+library(kableExtra)
+library(knitr)
+```
+
 ## Introduction
 
 Measles is a highly contagious viral disease that can lead to serious health complications, especially in young children. Vaccination programmes such as the measles, mumps, and rubella (MMR) vaccine have been highly effective in reducing the spread of measles. However, in public confidence in vaccination programmes can strongly influence vaccination uptake and therefore the level of susceptability within a population.
@@ -15,5 +27,73 @@ This report analyses measles susceptibility among pre-school children in Glasgow
 ## Exploratory Analysis
 
 ## Formal Analysis
+
+```{r}
+#| echo: false
+#| message: false
+
+glasmeasles <- read.csv("DAProject13.csv") |>
+  mutate(prop = Y/N, post_2004 = as_factor(ifelse(Year >= 2004, 1, 0)))
+glasmeasles$Year <- as.factor(glasmeasles$Year)
+```
+
+Building on the patterns observed in the exploratory analysis, logistic regression models were fitted to formally assess changes in measles susceptibility over time, using year as a categorical predictor and as a binary indicator for pre and post 2004.
+```{r}
+#| echo: false
+#| message: false
+
+year_model <- glm(prop ~ Year, data = glasmeasles, weights = N, family = binomial)
+
+year_model %>% tab_model(transform = NULL)
+```
+
+```{r}
+#| echo: false
+#| message: false
+
+check_overdispersion(year_model)
+```
+
+```{r}
+#| echo: false
+#| message: false
+
+plot_model(type = "pred",
+           year_model,
+           terms = "Year",
+           axis.title = c("Year",
+                          "Prob. of a child being susceptible to measles"),
+           title = " ")
+```
+
+The year-specific model confirms the temporal pattern identified in the exploratory analysis. Relative to 1998, susceptibility increases significantly between 2000 and 2004, with the largest effects observed in 2002 and 2004 (log-odds ≈ 0.33-0.34, p < 0.001), corresponding to probabilities of around 15-16%. Although 2006 remains elevated, the effect is smaller, indicating the start of a decline. From 2008 onwards, coefficients become negative, with significant reductions by 2010 and continuing through 2012 and 2014. This closely aligns  with the earlier visual trends, providing strong statistical evidence for a peak in the early 2000s followed by a sustained decline.
+
+To formally assess whether a structural change occurred around 2004, a second model compares observations before and after this point.
+
+```{r}
+#| echo: false
+#| message: false
+
+prepost_model <- glm(prop ~ post_2004, data = glasmeasles, weights = N, family = binomial)
+
+prepost_model %>% tab_model(transform = NULL)
+```
+
+```{r}
+#| echo: false
+#| message: false
+
+plot_model(type = "pred",
+           prepost_model,
+           terms = "post_2004",
+           axis.title = c("Before and after 2004",
+                          "Prob. of a child being susceptible to measles"),
+           title = " ")
+```
+
+The pre/post 2004 model tests the apparent turning point identified in the exploratory analysis. The post 2004 coefficient is negative and highly significant (log-odds = -0.23, p < 0.001), indicating a reduction in susceptibility after 2004. This corresponds to a decrease in probability from approximately 13.5% to 11%, consistent to a decrease with the observed downward trend. This provides strong evidence of a structural change in susceptibility occurring around 2004.
+
+The overdispersion test is statistically significant (dispersion ratio = 1.156, p < 0.001), but the magnitude is small, suggesting the model remains appropriate. Overall, the results provide consistent evidence that susceptibility increased in the early 2000s, peaked around 2002-2004, and declined significantly thereafter. The agreement between both models strengthens the conclusion that a meaningful change occurred around 2004.
+
 
 ## Conclusions
