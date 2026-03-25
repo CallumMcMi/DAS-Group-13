@@ -131,6 +131,7 @@ glasmeasles$Year <- as.factor(glasmeasles$Year)
 ```
 
 Building on the patterns observed in the exploratory analysis, logistic regression models were fitted to formally assess changes in measles susceptibility over time, using year as a categorical predictor and as a binary indicator for pre and post 2004.
+
 ```{r}
 #| echo: false
 #| message: false
@@ -159,7 +160,7 @@ plot_model(type = "pred",
            title = " ")
 ```
 
-The year-specific model confirms the temporal pattern identified in the exploratory analysis. Relative to 1998, susceptibility increases significantly between 2000 and 2004, with the largest effects observed in 2002 and 2004 (log-odds ≈ 0.33-0.34, p < 0.001), corresponding to probabilities of around 15-16%. Although 2006 remains elevated, the effect is smaller, indicating the start of a decline. From 2008 onwards, coefficients become negative, with significant reductions by 2010 and continuing through 2012 and 2014. This closely aligns  with the earlier visual trends, providing strong statistical evidence for a peak in the early 2000s followed by a sustained decline.
+The year-specific model confirms the temporal pattern identified in the exploratory analysis. Relative to 1998, susceptibility increases significantly between 2000 and 2004, with the largest effects observed in 2002 and 2004 (log-odds ≈ 0.33-0.34, p \< 0.001), corresponding to probabilities of around 15-16%. Although 2006 remains elevated, the effect is smaller, indicating the start of a decline. From 2008 onwards, coefficients become negative, with significant reductions by 2010 and continuing through 2012 and 2014. This closely aligns with the earlier visual trends, providing strong statistical evidence for a peak in the early 2000s followed by a sustained decline.
 
 To formally assess whether a structural change occurred around 2004, a second model compares observations before and after this point.
 
@@ -184,9 +185,14 @@ plot_model(type = "pred",
            title = " ")
 ```
 
-The pre/post 2004 model tests the apparent turning point identified in the exploratory analysis. The post 2004 coefficient is negative and highly significant (log-odds = -0.23, p < 0.001), indicating a reduction in susceptibility after 2004. This corresponds to a decrease in probability from approximately 13.5% to 11%, consistent to a decrease with the observed downward trend. This provides strong evidence of a structural change in susceptibility occurring around 2004.
+The pre/post 2004 model tests the apparent turning point identified in the exploratory analysis. The post 2004 coefficient is negative and highly significant (log-odds = -0.23, p \< 0.001), indicating a reduction in susceptibility after 2004. This corresponds to a decrease in probability from approximately 13.5% to 11%, consistent to a decrease with the observed downward trend. This provides strong evidence of a structural change in susceptibility occurring around 2004.
 
-The overdispersion test is statistically significant (dispersion ratio = 1.156, p < 0.001), but the magnitude is small, suggesting the model remains appropriate. Overall, the results provide consistent evidence that susceptibility increased in the early 2000s, peaked around 2002-2004, and declined significantly thereafter. The agreement between both models strengthens the conclusion that a meaningful change occurred around 2004.
-
+The overdispersion test is statistically significant (dispersion ratio = 1.156, p \< 0.001), but the magnitude is small, suggesting the model remains appropriate. Overall, the results provide consistent evidence that susceptibility increased in the early 2000s, peaked around 2002-2004, and declined significantly thereafter. The agreement between both models strengthens the conclusion that a meaningful change occurred around 2004.
 
 ## Conclusions
+
+Overall,the analysis provides clear evidence that measles susceptibility in Glasgow did change following the retraction of the Wakefield article. Susceptibility increased from 1998 to the early 2000s, reaching a peak of around 15% in 2002–2004, before declining steadily to approximately 8% by 2014 .
+
+The formal modelling results provide strong statistical evidence that this change is significant. Our year-specific logistic regression model shows significantly higher log-odds of susceptibility in the early 2000s compared to the baseline year, followed by significantly lower values in later years. More importantly, the pre/post 2004 model provides strong evidence of a structural change, with a negative coefficient for the post-2004 indicator, indicating a decrease in susceptibility around 2004 and confirming it as a turning point. This is consistent with the timing of the Wakefield article retraction.
+
+However, the study is limited by the use of aggregated data and the absence of additional explanatory variables, meaning that other factors such as public health interventions or socioeconomic differences may also explain the observed trend. As a result, while the timing of the change coincides with the Wakefield article retraction, the analysis cannot establish a causal relationship. In future studies, incorporating additional explanatory variables or extending the model to account for spatial and temporal dependence would better explain the drivers of measles susceptibility.
