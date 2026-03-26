@@ -94,14 +94,14 @@ glasmeasles %>%
   theme_minimal()
 ```
 
-As seen in @fig-box, Glasgows neighborhood medians peak in 2004, following the city-wide trend. Variability was highest between 2002 and 2006, suggesting the vaccine scare affected some areas much more than others. By 2014, neighbourhoods became more similar as susceptibility fell city-wide. Persistent outliers highlight specific high-risk zones, such as one neighborhood in 2000 with a rate exceeding 45%, well above the city average.
+As seen in @fig-box, Glasgow's neighborhood medians peak in 2004, following the city-wide trend. Variability was highest between 2002 and 2006, suggesting the vaccine scare affected some areas much more than others. By 2014, neighbourhoods became more similar as susceptibility fell city-wide. Persistent outliers highlight specific high-risk zones, such as one neighborhood in 2000 with a rate exceeding 45%, well above the city average.
 
 To support the visual trends observed in the previous figures, @tbl-summary provides the precise numerical values for the mean, median, and standard deviation of measles susceptibility across the 133 intermediate zones for each year.
 
 ```{r}
 #| echo: false
 #| label: tbl-summary
-#| tbl-cap: Mean, median and standard deviation (sd) of the proportion of measles susceptibility in Glasgow by Year.
+#| tbl-cap: Mean, median and standard deviation (sd) of the proportion of measles susceptibility in Glasgow by year.
 #| tbl-pos: "H"
 
 summary <- glasmeasles %>%
