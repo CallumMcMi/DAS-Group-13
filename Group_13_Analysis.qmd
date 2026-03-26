@@ -46,8 +46,8 @@ To observe the broader city-wide trend, we aggregated these data to calculate th
 #| fig-cap: Measles Susceptibility in Glasgow Pre-schoolers (1998-2014). The red dashed line indicates the 2004 partial retraction of the Wakefield article
 #| label: fig-trend
 #| fig-align: center
-#| fig-width: 4.5
-#| fig-height: 2.5
+#| fig-width: 4
+#| fig-height: 2
 
 yearly_trend <- glasmeasles %>%
   group_by(Year) %>%
@@ -80,8 +80,9 @@ To understand if the city-wide trend reflects all of Glasgow or just a few areas
 #| fig-cap: "Distribution of measles susceptibility rates across Glasgow's 133 intermediate zones (1998-2014)."
 #| label: fig-box
 #| fig-align: center
-#| fig-width: 5
-#| fig-height: 3
+#| fig-pos: "H"
+#| fig-width: 4
+#| fig-height: 2
 
 glasmeasles %>%
   ggplot(aes(x = factor(Year), y = prop)) +
@@ -101,6 +102,7 @@ To support the visual trends observed in the previous figures, @tbl-summary prov
 #| echo: false
 #| label: tbl-summary
 #| tbl-cap: Mean, median and standard deviation (sd) of the proportion of measles susceptibility in Glasgow by Year.
+#| tbl-pos: "H"
 
 summary <- glasmeasles %>%
   summarise('Prop_Mean' = mean(prop, na.rm = TRUE),
@@ -135,6 +137,8 @@ Building on the patterns observed in the exploratory analysis, logistic regressi
 ```{r}
 #| echo: false
 #| message: false
+#| label: tbl-yearmodel
+#| tbl-cap: Coefficients, CIs and p-values for the logistic model treating year as a categorial predictor.
 
 year_model <- glm(prop ~ Year, data = glasmeasles, weights = N, family = binomial)
 
@@ -151,6 +155,8 @@ check_overdispersion(year_model)
 ```{r}
 #| echo: false
 #| message: false
+#| fig-cap: Predicted probability of a Glasgow pre-schooler being susceptible to measles by year (1998-2014). The vertical line around points indicates the 95% confidence interval.
+#| label: fig-yearpred
 
 plot_model(type = "pred",
            year_model,
@@ -160,13 +166,16 @@ plot_model(type = "pred",
            title = " ")
 ```
 
-The year-specific model confirms the temporal pattern identified in the exploratory analysis. Relative to 1998, susceptibility increases significantly between 2000 and 2004, with the largest effects observed in 2002 and 2004 (log-odds ≈ 0.33-0.34, p \< 0.001), corresponding to probabilities of around 15-16%. Although 2006 remains elevated, the effect is smaller, indicating the start of a decline. From 2008 onwards, coefficients become negative, with significant reductions by 2010 and continuing through 2012 and 2014. This closely aligns with the earlier visual trends, providing strong statistical evidence for a peak in the early 2000s followed by a sustained decline.
+The year-specific model confirms the temporal pattern identified in the exploratory analysis. Relative to 1998, susceptibility increases significantly between 2000 and 2004, with the largest effects observed in 2002 and 2004 (log-odds $\approx$ 0.33-0.34, p \< 0.001), corresponding to probabilities of around 15-16%. Although 2006 remains elevated, the effect is smaller, indicating the start of a decline. From 2008 onwards, coefficients become negative, with significant reductions by 2010 and continuing through 2012 and 2014. This closely aligns with the earlier visual trends, providing strong statistical evidence for a peak in the early 2000s followed by a sustained decline.
+The overdispersion test is statistically significant (dispersion ratio = 1.156, p \< 0.001), but the magnitude is small, suggesting the model remains appropriate. 
 
 To formally assess whether a structural change occurred around 2004, a second model compares observations before and after this point.
 
 ```{r}
 #| echo: false
 #| message: false
+#| label: tbl-binarymodel
+#| tbl-cap: Coefficients, CIs and p-values for the logistic model treating year as a binary predictor (observations from before 2004/observations from 2004 and later).
 
 prepost_model <- glm(prop ~ post_2004, data = glasmeasles, weights = N, family = binomial)
 
@@ -176,6 +185,8 @@ prepost_model %>% tab_model(transform = NULL)
 ```{r}
 #| echo: false
 #| message: false
+#| fig-cap: Predicted probability of a Glasgow pre-schooler being susceptible to measles for before 2004 (0) or 2004 and later (1). The vertical line around points indicates the 95% confidence interval.
+#| label: fig-binarypred
 
 plot_model(type = "pred",
            prepost_model,
@@ -187,7 +198,7 @@ plot_model(type = "pred",
 
 The pre/post 2004 model tests the apparent turning point identified in the exploratory analysis. The post 2004 coefficient is negative and highly significant (log-odds = -0.23, p \< 0.001), indicating a reduction in susceptibility after 2004. This corresponds to a decrease in probability from approximately 13.5% to 11%, consistent to a decrease with the observed downward trend. This provides strong evidence of a structural change in susceptibility occurring around 2004.
 
-The overdispersion test is statistically significant (dispersion ratio = 1.156, p \< 0.001), but the magnitude is small, suggesting the model remains appropriate. Overall, the results provide consistent evidence that susceptibility increased in the early 2000s, peaked around 2002-2004, and declined significantly thereafter. The agreement between both models strengthens the conclusion that a meaningful change occurred around 2004.
+Overall, the results provide consistent evidence that susceptibility increased in the early 2000s, peaked around 2002-2004, and declined significantly thereafter. The agreement between both models strengthens the conclusion that a meaningful change occurred around 2004.
 
 ## Conclusions
 
